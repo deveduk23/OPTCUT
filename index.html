@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OptCut MVP - Otimização de Corte de Chapas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>OptCut MVP</h1>
+    <p>Otimização prática de corte de chapas metálicas (mm)</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>1) Chapa principal</h2>
+      <div class="grid grid-3">
+        <label>Largura (mm)
+          <input id="sheetWidth" type="number" min="1" value="3000" />
+        </label>
+        <label>Altura (mm)
+          <input id="sheetHeight" type="number" min="1" value="1500" />
+        </label>
+        <label>Espessura (mm)
+          <input id="sheetThickness" type="number" min="0" step="0.1" value="1.2" />
+        </label>
+        <label>Material
+          <input id="sheetMaterial" type="text" value="Aço carbono" />
+        </label>
+        <label>Qtd. de chapas disponíveis
+          <input id="sheetQty" type="number" min="1" value="2" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2) Peças para corte</h2>
+      <div class="table-actions">
+        <button id="addPartBtn" class="btn btn-secondary">+ Adicionar peça</button>
+      </div>
+      <div class="table-wrap">
+        <table id="partsTable">
+          <thead>
+            <tr>
+              <th>Descrição</th>
+              <th>Largura (mm)</th>
+              <th>Altura (mm)</th>
+              <th>Quantidade</th>
+              <th>Rotação (auto)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="partsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3) Configuração global</h2>
+      <div class="grid grid-3">
+        <label>Kerf (espessura do corte em mm)
+          <input id="kerf" type="number" min="0" step="0.1" value="2" />
+        </label>
+        <label>Margem de segurança (mm)
+          <input id="margin" type="number" min="0" step="0.1" value="5" />
+        </label>
+        <label>Unidade
+          <input type="text" value="mm" disabled />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4) Operações</h2>
+      <div class="actions">
+        <button id="calculateBtn" class="btn btn-primary">Calcular</button>
+        <button id="clearBtn" class="btn">Limpar</button>
+        <button id="saveBtn" class="btn">Salvar JSON</button>
+        <button id="loadBtn" class="btn">Carregar JSON</button>
+        <button id="pdfBtn" class="btn">Exportar PDF</button>
+        <input id="fileLoader" type="file" accept="application/json" hidden />
+      </div>
+      <p class="note">Dica: o botão Exportar PDF abre a janela de impressão do navegador. Salve como PDF.</p>
+    </section>
+
+    <section class="card" id="summaryCard">
+      <h2>5) Resumo</h2>
+      <div id="summary" class="summary empty">Nenhum cálculo executado.</div>
+    </section>
+
+    <section class="card" id="resultsCard">
+      <h2>6) Planos de corte</h2>
+      <div id="results" class="results empty">Informe os dados e clique em <strong>Calcular</strong>.</div>
+    </section>
+  </main>
+
+  <template id="partRowTemplate">
+    <tr>
+      <td><input type="text" class="part-desc" placeholder="Peça" /></td>
+      <td><input type="number" class="part-width" min="1" value="500" /></td>
+      <td><input type="number" class="part-height" min="1" value="300" /></td>
+      <td><input type="number" class="part-qty" min="1" value="1" /></td>
+      <td>
+        <select class="part-rot">
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+      </td>
+      <td><button class="btn btn-danger btn-small remove-row">Remover</button></td>
+    </tr>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
