@@ -3,52 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OptCut MVP - Otimização de Corte de Chapas</title>
+  <title>OptCut Pro - Nesting de Chapas</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="topbar">
-    <h1>OptCut MVP</h1>
-    <p>Otimização prática de corte de chapas metálicas (mm)</p>
+    <h1>OptCut Pro</h1>
+    <p>Nesting inteligente, tempo/custo integrado e exportação técnica</p>
   </header>
 
   <main class="container">
     <section class="card">
-      <h2>1) Chapa principal</h2>
-      <div class="grid grid-3">
-        <label>Largura (mm)
-          <input id="sheetWidth" type="number" min="1" value="3000" />
-        </label>
-        <label>Altura (mm)
-          <input id="sheetHeight" type="number" min="1" value="1500" />
-        </label>
-        <label>Espessura (mm)
-          <input id="sheetThickness" type="number" min="0" step="0.1" value="1.2" />
-        </label>
-        <label>Material
-          <input id="sheetMaterial" type="text" value="Aço carbono" />
-        </label>
-        <label>Qtd. de chapas disponíveis
-          <input id="sheetQty" type="number" min="1" value="2" />
-        </label>
+      <h2>1) Chapa e parâmetros globais</h2>
+      <div class="grid grid-4">
+        <label>Largura da chapa (mm)<input id="sheetWidth" type="number" min="1" value="3000"></label>
+        <label>Altura da chapa (mm)<input id="sheetHeight" type="number" min="1" value="1500"></label>
+        <label>Qtd. chapas disponíveis<input id="sheetQty" type="number" min="1" value="3"></label>
+        <label>Margem da borda (mm)<input id="edgeMargin" type="number" min="0" step="0.1" value="5"></label>
+        <label>Margem entre peças (mm)<input id="partGap" type="number" min="0" step="0.1" value="3"></label>
+        <label>Material da chapa<input id="sheetMaterial" type="text" value="Aço carbono"></label>
+        <label>Espessura da chapa (mm)<input id="sheetThickness" type="number" min="0" step="0.1" value="1.2"></label>
+        <label>Tentativas otimização<input id="maxAttempts" type="number" min="1" step="1" value="120"></label>
+      </div>
+
+      <h3>Configuração de corte</h3>
+      <div class="grid grid-4">
+        <label>Velocidade efetiva (mm/min)<input id="cutSpeed" type="number" min="0.01" step="0.01" value="1350"></label>
+        <label>Tempo por perfuração (min)<input id="pierceTime" type="number" min="0" step="0.0001" value="0.03"></label>
+        <label>Tempo movimentos (min)<input id="moveTime" type="number" min="0" step="0.0001" value="0"></label>
+        <label>Valor minuto máquina (R$)<input id="minuteRate" type="number" min="0" step="0.01" value="13.13"></label>
       </div>
     </section>
 
     <section class="card">
-      <h2>2) Peças para corte</h2>
-      <div class="table-actions">
-        <button id="addPartBtn" class="btn btn-secondary">+ Adicionar peça</button>
-      </div>
+      <h2>2) Cadastro de peças (mistura no mesmo layout)</h2>
+      <div class="actions"><button id="addPartBtn" class="btn btn-secondary">+ Adicionar peça</button></div>
       <div class="table-wrap">
-        <table id="partsTable">
+        <table>
           <thead>
             <tr>
-              <th>Descrição</th>
-              <th>Largura (mm)</th>
-              <th>Altura (mm)</th>
-              <th>Quantidade</th>
-              <th>Rotação (auto)</th>
-              <th>Ações</th>
+              <th>ID</th><th>Nome</th><th>Largura</th><th>Altura</th><th>Qtd</th>
+              <th>Comp. corte (mm)</th><th>Perf.</th><th>Rotação permitida</th>
+              <th>Esp.(mm)</th><th>Material</th><th>Margem peça (mm)</th><th>Prioridade</th><th>Ações</th>
             </tr>
           </thead>
           <tbody id="partsBody"></tbody>
@@ -57,94 +53,60 @@
     </section>
 
     <section class="card">
-      <h2>3) Configuração global</h2>
-      <div class="grid grid-3">
-        <label>Kerf (espessura do corte em mm)
-          <input id="kerf" type="number" min="0" step="0.1" value="2" />
-        </label>
-        <label>Margem de segurança (mm)
-          <input id="margin" type="number" min="0" step="0.1" value="5" />
-        </label>
-        <label>Unidade
-          <input type="text" value="mm" disabled />
-        </label>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>4) Cálculo de tempo e custo de corte</h2>
-      <div class="grid grid-4">
-        <label>Largura (mm)
-          <input id="calcWidth" type="number" min="0" step="0.01" value="450" />
-        </label>
-        <label>Altura (mm)
-          <input id="calcHeight" type="number" min="0" step="0.01" value="300" />
-        </label>
-        <label>Comprimento de corte (mm)
-          <input id="calcCutLength" type="number" min="0" step="0.01" value="1500" />
-        </label>
-        <label>Perfurações
-          <input id="calcPiercings" type="number" min="0" step="1" value="1" />
-        </label>
-        <label>Quantidade
-          <input id="calcQty" type="number" min="1" step="1" value="10" />
-        </label>
-        <label>Velocidade efetiva (mm/min)
-          <input id="calcSpeed" type="number" min="0.01" step="0.01" value="1350" />
-        </label>
-        <label>Tempo por perfuração (min)
-          <input id="calcPierceTime" type="number" min="0" step="0.0001" value="0.03" />
-        </label>
-        <label>Valor minuto máquina
-          <input id="calcMinuteCost" type="number" min="0" step="0.01" value="13.13" />
-        </label>
-      </div>
-      <div class="actions">
-        <button id="calcCostBtn" class="btn btn-primary">Calcular tempo/custo</button>
-      </div>
-      <div id="costSummary" class="summary empty">Preencha os parâmetros e clique em <strong>Calcular tempo/custo</strong>.</div>
-    </section>
-
-    <section class="card">
-      <h2>5) Operações</h2>
+      <h2>3) Operações</h2>
       <div class="actions">
         <button id="calculateBtn" class="btn btn-primary">Calcular</button>
+        <button id="aggressiveBtn" class="btn btn-primary">Otimizar distribuição (agressivo)</button>
         <button id="clearBtn" class="btn">Limpar</button>
         <button id="saveBtn" class="btn">Salvar JSON</button>
         <button id="loadBtn" class="btn">Carregar JSON</button>
+        <button id="exportSvgBtn" class="btn">Exportar SVG</button>
+        <button id="exportPngBtn" class="btn">Exportar PNG</button>
         <button id="pdfBtn" class="btn">Exportar PDF</button>
-        <input id="fileLoader" type="file" accept="application/json" hidden />
+        <input id="fileLoader" type="file" accept="application/json" hidden>
       </div>
-      <p class="note">Dica: o botão Exportar PDF abre a janela de impressão do navegador. Salve como PDF.</p>
+      <p class="note">A exportação usa traço técnico com espessura aumentada (2x) no preview e nos arquivos.</p>
     </section>
 
-    <section class="card" id="summaryCard">
-      <h2>6) Resumo</h2>
+    <section class="card">
+      <h2>4) Resumo geral</h2>
       <div id="summary" class="summary empty">Nenhum cálculo executado.</div>
     </section>
 
-    <section class="card" id="resultsCard">
-      <h2>7) Planos de corte</h2>
+    <section class="card">
+      <h2>5) Relatório por peça</h2>
+      <div id="pieceReport" class="summary empty">Nenhum cálculo executado.</div>
+    </section>
+
+    <section class="card">
+      <h2>6) Planos de corte por chapa</h2>
       <div id="results" class="results empty">Informe os dados e clique em <strong>Calcular</strong>.</div>
     </section>
   </main>
 
   <template id="partRowTemplate">
     <tr>
-      <td><input type="text" class="part-desc" placeholder="Peça" /></td>
-      <td><input type="number" class="part-width" min="1" value="500" /></td>
-      <td><input type="number" class="part-height" min="1" value="300" /></td>
-      <td><input type="number" class="part-qty" min="1" value="1" /></td>
+      <td><input class="part-id" type="text" value="P1"></td>
+      <td><input class="part-name" type="text" value="Peça"></td>
+      <td><input class="part-width" type="number" min="1" value="500"></td>
+      <td><input class="part-height" type="number" min="1" value="300"></td>
+      <td><input class="part-qty" type="number" min="1" value="1"></td>
+      <td><input class="part-cut" type="number" min="0" step="0.01" value="1600"></td>
+      <td><input class="part-pierce" type="number" min="0" step="1" value="1"></td>
       <td>
-        <select class="part-rot">
+        <select class="part-rotation">
           <option value="true">Sim</option>
           <option value="false">Não</option>
         </select>
       </td>
+      <td><input class="part-thickness" type="number" min="0" step="0.1" value="1.2"></td>
+      <td><input class="part-material" type="text" value="Aço carbono"></td>
+      <td><input class="part-gap" type="number" min="0" step="0.1" value="3"></td>
+      <td><input class="part-priority" type="number" min="0" step="1" value="0"></td>
       <td><button class="btn btn-danger btn-small remove-row">Remover</button></td>
     </tr>
   </template>
 
-  <script src="script.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>
