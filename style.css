@@ -1,0 +1,292 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #d1d5db;
+  --primary: #0b5fff;
+  --primary-hover: #0849c8;
+  --danger: #d11a2a;
+  --chip: #eef2ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.topbar {
+  background: linear-gradient(120deg, #0b1f3a, #12386c);
+  color: #fff;
+  padding: 20px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.topbar p {
+  margin: 6px 0 0;
+  color: #dbe8ff;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 14px 30px;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+}
+
+.grid {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  color: #374151;
+  font-size: 0.92rem;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 780px;
+}
+
+th,
+td {
+  border-bottom: 1px solid #edf0f3;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+}
+
+.btn {
+  border: 1px solid #c7ced9;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f8fafc;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-secondary {
+  border-color: #94a3b8;
+}
+
+.btn-danger {
+  border-color: #f0b7bc;
+  color: var(--danger);
+}
+
+.btn-small {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.actions,
+.table-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.summary {
+  display: grid;
+  gap: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.kpi {
+  background: #f9fbff;
+  border: 1px solid #dde8ff;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.kpi .label {
+  color: #64748b;
+  font-size: 0.83rem;
+}
+
+.kpi .value {
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.empty {
+  color: #6b7280;
+}
+
+.results {
+  display: grid;
+  gap: 16px;
+}
+
+.sheet-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.sheet-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.sheet-meta {
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.sheet-canvas-wrap {
+  width: 100%;
+  border: 1px solid #dbe2ea;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 8px;
+  overflow: auto;
+}
+
+.sheet-canvas {
+  position: relative;
+  background: #fff;
+  border: 1px dashed #9ca3af;
+}
+
+.piece {
+  position: absolute;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.piece span {
+  font-size: 11px;
+  text-align: center;
+  color: #111827;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+.unallocated {
+  margin-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--chip);
+  color: #1e3a8a;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+
+@media print {
+  .topbar,
+  .actions,
+  .table-actions,
+  .note,
+  #loadBtn,
+  #saveBtn,
+  #clearBtn,
+  #addPartBtn,
+  .remove-row {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .card {
+    break-inside: avoid;
+    border-color: #ddd;
+    box-shadow: none;
+  }
+}
