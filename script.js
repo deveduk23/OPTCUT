@@ -6,6 +6,16 @@ const els = {
   sheetQty: document.getElementById('sheetQty'),
   kerf: document.getElementById('kerf'),
   margin: document.getElementById('margin'),
+  calcWidth: document.getElementById('calcWidth'),
+  calcHeight: document.getElementById('calcHeight'),
+  calcCutLength: document.getElementById('calcCutLength'),
+  calcPiercings: document.getElementById('calcPiercings'),
+  calcQty: document.getElementById('calcQty'),
+  calcSpeed: document.getElementById('calcSpeed'),
+  calcPierceTime: document.getElementById('calcPierceTime'),
+  calcMinuteCost: document.getElementById('calcMinuteCost'),
+  calcCostBtn: document.getElementById('calcCostBtn'),
+  costSummary: document.getElementById('costSummary'),
   partsBody: document.getElementById('partsBody'),
   partRowTemplate: document.getElementById('partRowTemplate'),
   addPartBtn: document.getElementById('addPartBtn'),
@@ -20,6 +30,13 @@ const els = {
 };
 
 let lastResult = null;
+
+function formatNumber(value, decimals = 2) {
+  return Number(value).toLocaleString('pt-BR', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals
+  });
+}
 
 function addPartRow(data = {}) {
   const row = els.partRowTemplate.content.firstElementChild.cloneNode(true);
@@ -311,6 +328,55 @@ function optimize(project) {
   };
 }
 
+function calculateTimeAndCost() {
+  const larguraMm = getInputNumber(els.calcWidth, 'Largura (cálculo)');
+  const alturaMm = getInputNumber(els.calcHeight, 'Altura (cálculo)');
+  const comprimentoCorteMm = getInputNumber(els.calcCutLength, 'Comprimento de corte');
+  const perfuracoes = Math.max(0, Math.floor(getInputNumber(els.calcPiercings, 'Perfurações')));
+  const quantidade = Math.max(1, Math.floor(getInputNumber(els.calcQty, 'Quantidade')));
+  const velocidadeEfetivaMmMin = getInputNumber(els.calcSpeed, 'Velocidade efetiva');
+  const tempoPorPerfuracaoMin = getInputNumber(els.calcPierceTime, 'Tempo por perfuração');
+  const valorMinutoMaquina = getInputNumber(els.calcMinuteCost, 'Valor minuto máquina');
+
+  if (velocidadeEfetivaMmMin <= 0) {
+    throw new Error('Velocidade efetiva deve ser maior que zero.');
+  }
+
+  const areaMm2 = larguraMm * alturaMm;
+  const tempoPorPecaMin = (comprimentoCorteMm / velocidadeEfetivaMmMin)
+    + (perfuracoes * tempoPorPerfuracaoMin);
+  const tempoTotalLoteMin = tempoPorPecaMin * quantidade;
+  const comprimentoTotalMm = comprimentoCorteMm * quantidade;
+  const perfuracoesTotais = perfuracoes * quantidade;
+  const custoPorPeca = tempoPorPecaMin * valorMinutoMaquina;
+  const custoTotal = custoPorPeca * quantidade;
+
+  return {
+    areaMm2,
+    tempoPorPecaMin,
+    tempoTotalLoteMin,
+    comprimentoTotalMm,
+    perfuracoesTotais,
+    custoPorPeca,
+    custoTotal
+  };
+}
+
+function renderTimeAndCost(result) {
+  els.costSummary.classList.remove('empty');
+  els.costSummary.innerHTML = `
+    <div class="summary-grid">
+      <div class="kpi"><div class="label">area_mm2</div><div class="value">${formatNumber(result.areaMm2, 2)} mm²</div></div>
+      <div class="kpi"><div class="label">tempo_por_peca_min</div><div class="value">${formatNumber(result.tempoPorPecaMin, 4)} min</div></div>
+      <div class="kpi"><div class="label">tempo_total_lote_min</div><div class="value">${formatNumber(result.tempoTotalLoteMin, 4)} min</div></div>
+      <div class="kpi"><div class="label">comprimento_total_mm</div><div class="value">${formatNumber(result.comprimentoTotalMm, 2)} mm</div></div>
+      <div class="kpi"><div class="label">perfuracoes_totais</div><div class="value">${formatNumber(result.perfuracoesTotais, 0)}</div></div>
+      <div class="kpi"><div class="label">custo_por_peca</div><div class="value">R$ ${formatNumber(result.custoPorPeca, 4)}</div></div>
+      <div class="kpi"><div class="label">custo_total</div><div class="value">R$ ${formatNumber(result.custoTotal, 4)}</div></div>
+    </div>
+  `;
+}
+
 function colorForName(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i += 1) hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -418,6 +484,8 @@ function clearAll() {
   els.summary.textContent = 'Nenhum cálculo executado.';
   els.results.className = 'results empty';
   els.results.innerHTML = 'Informe os dados e clique em <strong>Calcular</strong>.';
+  els.costSummary.className = 'summary empty';
+  els.costSummary.innerHTML = 'Preencha os parâmetros e clique em <strong>Calcular tempo/custo</strong>.';
   lastResult = null;
 }
 
@@ -454,6 +522,15 @@ function boot() {
       lastResult = result;
       renderSummary(result);
       renderResults(result);
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  els.calcCostBtn.addEventListener('click', () => {
+    try {
+      const calculation = calculateTimeAndCost();
+      renderTimeAndCost(calculation);
     } catch (error) {
       alert(error.message);
     }

@@ -72,7 +72,41 @@
     </section>
 
     <section class="card">
-      <h2>4) Operações</h2>
+      <h2>4) Cálculo de tempo e custo de corte</h2>
+      <div class="grid grid-4">
+        <label>Largura (mm)
+          <input id="calcWidth" type="number" min="0" step="0.01" value="450" />
+        </label>
+        <label>Altura (mm)
+          <input id="calcHeight" type="number" min="0" step="0.01" value="300" />
+        </label>
+        <label>Comprimento de corte (mm)
+          <input id="calcCutLength" type="number" min="0" step="0.01" value="1500" />
+        </label>
+        <label>Perfurações
+          <input id="calcPiercings" type="number" min="0" step="1" value="1" />
+        </label>
+        <label>Quantidade
+          <input id="calcQty" type="number" min="1" step="1" value="10" />
+        </label>
+        <label>Velocidade efetiva (mm/min)
+          <input id="calcSpeed" type="number" min="0.01" step="0.01" value="1350" />
+        </label>
+        <label>Tempo por perfuração (min)
+          <input id="calcPierceTime" type="number" min="0" step="0.0001" value="0.03" />
+        </label>
+        <label>Valor minuto máquina
+          <input id="calcMinuteCost" type="number" min="0" step="0.01" value="13.13" />
+        </label>
+      </div>
+      <div class="actions">
+        <button id="calcCostBtn" class="btn btn-primary">Calcular tempo/custo</button>
+      </div>
+      <div id="costSummary" class="summary empty">Preencha os parâmetros e clique em <strong>Calcular tempo/custo</strong>.</div>
+    </section>
+
+    <section class="card">
+      <h2>5) Operações</h2>
       <div class="actions">
         <button id="calculateBtn" class="btn btn-primary">Calcular</button>
         <button id="clearBtn" class="btn">Limpar</button>
@@ -85,12 +119,12 @@
     </section>
 
     <section class="card" id="summaryCard">
-      <h2>5) Resumo</h2>
+      <h2>6) Resumo</h2>
       <div id="summary" class="summary empty">Nenhum cálculo executado.</div>
     </section>
 
     <section class="card" id="resultsCard">
-      <h2>6) Planos de corte</h2>
+      <h2>7) Planos de corte</h2>
       <div id="results" class="results empty">Informe os dados e clique em <strong>Calcular</strong>.</div>
     </section>
   </main>
